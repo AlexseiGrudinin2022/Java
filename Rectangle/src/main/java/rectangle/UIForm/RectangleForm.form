@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="rectangle.UIForm.RectangleForm">
+  <grid id="27dc6" binding="view" layout-manager="BorderLayout" hgap="0" vgap="0">
+    <constraints>
+      <xy x="20" y="20" width="829" height="475"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <grid id="475c9" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+        <constraints border-constraint="North"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="961ad" class="javax.swing.JLabel" binding="x1Lbl">
+            <constraints/>
+            <properties>
+              <text value="x1"/>
+            </properties>
+          </component>
+          <component id="7a87a" class="javax.swing.JTextField" binding="x1">
+            <constraints/>
+            <properties>
+              <columns value="5"/>
+            </properties>
+            <clientProperties>
+              <caretWidth class="java.lang.Integer" value="1"/>
+            </clientProperties>
+          </component>
+          <component id="1fb04" class="javax.swing.JLabel" binding="x2Lbl">
+            <constraints/>
+            <properties>
+              <text value="x2"/>
+            </properties>
+          </component>
+          <component id="3ca6b" class="javax.swing.JTextField" binding="x2">
+            <constraints/>
+            <properties>
+              <columns value="5"/>
+            </properties>
+            <clientProperties>
+              <caretWidth class="java.lang.Integer" value="1"/>
+            </clientProperties>
+          </component>
+          <component id="9f4e1" class="javax.swing.JLabel" binding="spliter">
+            <constraints/>
+            <properties>
+              <text value="—"/>
+            </properties>
+          </component>
+          <component id="471b" class="javax.swing.JLabel" binding="y1Lbl">
+            <constraints/>
+            <properties>
+              <text value="y1"/>
+            </properties>
+          </component>
+          <component id="e9759" class="javax.swing.JTextField" binding="y1">
+            <constraints/>
+            <properties>
+              <columns value="5"/>
+            </properties>
+            <clientProperties>
+              <caretWidth class="java.lang.Integer" value="1"/>
+            </clientProperties>
+          </component>
+          <component id="a86ef" class="javax.swing.JLabel" binding="y2Lbl">
+            <constraints/>
+            <properties>
+              <text value="y2"/>
+            </properties>
+          </component>
+          <component id="63b0e" class="javax.swing.JTextField" binding="y2">
+            <constraints/>
+            <properties>
+              <columns value="5"/>
+            </properties>
+            <clientProperties>
+              <caretWidth class="java.lang.Integer" value="1"/>
+            </clientProperties>
+          </component>
+          <component id="a8054" class="javax.swing.JButton" binding="addRectangle">
+            <constraints/>
+            <properties>
+              <doubleBuffered value="true"/>
+              <selected value="false"/>
+              <text value="Добавить объект"/>
+            </properties>
+          </component>
+          <component id="5c64c" class="javax.swing.JButton" binding="computeBtn">
+            <constraints/>
+            <properties>
+              <doubleBuffered value="true"/>
+              <text value="Рассчитать"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <component id="a24f3" class="javax.swing.JTextArea" binding="printInput">
+        <constraints border-constraint="Center"/>
+        <properties/>
+      </component>
+      <grid id="c837a" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints border-constraint="South"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="75bcf" class="javax.swing.JButton" binding="clearStorage">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <doubleBuffered value="true"/>
+              <text value="Очистить хранилище"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+    </children>
+  </grid>
+</form>
