@@ -24,22 +24,18 @@ public final class EventsApplication {
     private final String objectParseToJSON;
 
     private Path IOJSONFile;
-
-    private final String JSON_RESULT_FILE_NAME = "result.json";
+    private Path IOResultFile;
 
     private final Logger logger = (Logger) LogManager.getRootLogger();
 
 
-    private boolean inputIsValid(Double x1, Double x2, Double y1, Double y2) {
-        return (x1 != null && x2 != null && y1 != null && y2 != null);
-    }
-
-    public EventsApplication(String IOJSONFile_, String objectParseToJSON) {
+    public EventsApplication(String IOJSONFile_, String IOResultFile, String objectParseToJSON) {
 
         try {
             this.IOJSONFile = Paths.get(IOJSONFile_);
+            this.IOResultFile = Paths.get(IOResultFile);
         } catch (Exception ex) {
-            System.err.println("такого файла нет");
+            logger.error(ex.getMessage());
         }
 
 
@@ -88,12 +84,11 @@ public final class EventsApplication {
     }
 
     public Rectangle findOverLappingRectangle() {
-        Path resultJSON = Path.of(IOJSONFile.getParent() + "\\" + JSON_RESULT_FILE_NAME);
 
         ComputeOverLappingRectangle compute = new ComputeOverLappingRectangle(rectangleList);
         Rectangle rectangle = compute.compute();
 
-        new JSONWriter(resultJSON).write(Collections.singletonList(rectangle), objectParseToJSON); //пишем json result
+        new JSONWriter(IOResultFile).write(Collections.singletonList(rectangle), objectParseToJSON); //пишем json result
 
         return rectangle;
     }
@@ -109,9 +104,8 @@ public final class EventsApplication {
     }
 
     public Rectangle getResultFromJSON() {
-        Path resultJSON = Path.of(IOJSONFile.getParent() + "\\" + JSON_RESULT_FILE_NAME);
-        if (Files.exists(resultJSON)) {
-            return new JSONReader(resultJSON).readJSONToList(objectParseToJSON).stream().findFirst().orElse(null);
+        if (Files.exists(IOResultFile)) {
+            return new JSONReader(IOResultFile).readJSONToList(objectParseToJSON).stream().findFirst().orElse(null);
         } else {
             return null;
         }
