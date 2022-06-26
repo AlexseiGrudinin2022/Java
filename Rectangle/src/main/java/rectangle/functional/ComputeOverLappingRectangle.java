@@ -5,11 +5,11 @@ import rectangle.model.Rectangle;
 
 import java.util.List;
 
-public class ActionImpl implements ActionCompute {
+public class ComputeOverLappingRectangle implements RectangleFunctionality {
 
     private final List<Rectangle> rectangleList;
 
-    public ActionImpl(List<Rectangle> rectangleList) {
+    public ComputeOverLappingRectangle(List<Rectangle> rectangleList) {
         this.rectangleList = rectangleList;
     }
 
@@ -25,17 +25,17 @@ public class ActionImpl implements ActionCompute {
 
         if (!rectangleList.isEmpty()) {
             Rectangle startRectangle = rectangleList.get(0);
-            x1 = startRectangle.x1();
-            x2 = startRectangle.x2();
-            y1 = startRectangle.y1();
-            y2 = startRectangle.y2();
+            x1 = startRectangle.getX1();
+            x2 = startRectangle.getX2();
+            y1 = startRectangle.getY1();
+            y2 = startRectangle.getY2();
 
             for (int i = 1; i < rectangleList.size(); i++) {
                 Rectangle temp = rectangleList.get(i);
-                x1 = Math.max(x1, temp.x1());
-                x2 = Math.min(x2, temp.x2());
-                y1 = Math.max(y1, temp.y1());
-                y2 = Math.min(y2, temp.y2());
+                x1 = Math.max(x1, temp.getX1());
+                x2 = Math.min(x2, temp.getX2());
+                y1 = Math.max(y1, temp.getY1());
+                y2 = Math.min(y2, temp.getY2());
 
                 if (!isValid(x1, x2, y1, y2)) {
                     return null;
@@ -48,7 +48,7 @@ public class ActionImpl implements ActionCompute {
 
 
     private boolean isValid(double x1, double x2, double y1, double y2) {
-        return (x1 <= x2 && y1 <= y2);
+        return (x1 < x2 && y1 < y2);
     }
 
 

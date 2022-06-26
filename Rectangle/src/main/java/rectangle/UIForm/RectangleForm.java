@@ -1,26 +1,20 @@
 package rectangle.UIForm;
 
-
-import rectangle.JSON.JSONReaderToStorage;
-import rectangle.JSON.JSONWriter;
-import rectangle.functional.ActionImpl;
-import rectangle.input.InputCoordinate;
+import rectangle.UIForm.events.EventsApplication;
 import rectangle.model.Rectangle;
-import rectangle.storage.RectangleStorage;
 
 import javax.swing.*;
 import java.awt.event.FocusEvent;
-import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 
-public class RectangleForm {
+public final class RectangleForm {
 
     private JPanel view;
-    private JTextField x1;
-    private JTextField x2;
-    private JTextField y1;
-    private JTextField y2;
+    private JTextField x1Edit;
+    private JTextField x2Edit;
+    private JTextField y1Edit;
+    private JTextField y2Edit;
     private JButton addRectangle;
     private JTextArea printInput;
     private JButton computeBtn;
@@ -29,197 +23,98 @@ public class RectangleForm {
     private JLabel spliter;
     private JLabel x2Lbl;
     private JLabel x1Lbl;
-    private JButton clearStorage;
+    private JButton savingResult;
+    private JLabel countRectangle;
+    private JButton clearRect;
+
+
+    private final String MESSAGE_FROM_AREA = "список имеющихся прямоугольников\n";
+
+
+    private final EventsApplication APPLICATION_EVENTS;
+
+    public RectangleForm(EventsApplication applicationEvents) {
+
+        this.APPLICATION_EVENTS = applicationEvents;
+
+        printInput.setEditable(false);
+        printAllRectangles(MESSAGE_FROM_AREA, APPLICATION_EVENTS.getRectangleListFromJSON(true));
+        this.countRectangle.setText("Всего фигур: " + APPLICATION_EVENTS.getCountRecord());
+        addRectangle.addActionListener(add -> addRectangle()); //добавить в json и storage
+        computeBtn.addActionListener(compute -> findOverLappingRectangle()); //рассчитать
+        savingResult.addActionListener(show -> showResultJSONFile()); // просмотр resultJson
+        clearRect.addActionListener(clear -> clearInputRectangles()); //убрать все прямоугольник и json
+    }
 
     public JPanel getView() {
         return view;
     }
 
-
-    private JSONWriter jsonWriter;
-
-    private final String MESSAGE_FROM_AREA = "список имеющихся прямоугольников\n";
-
-    private void requestFocusToEdit(JTextField edit) {
-        edit.requestFocusInWindow(FocusEvent.Cause.ACTIVATION);
-    }
-
-    private boolean isComputeDump = false;
-
-    private void clearInput() {
-        x1.setText("");
-        x2.setText("");
-        y1.setText("");
-        y2.setText("");
-        requestFocusToEdit(x1);
-    }
-
-    private boolean checkInputIsOK(Double x1Coordinate, Double x2Coordinate, Double y1Coordinate, Double y2Coordinate) {
-        String message = "";
-        boolean inputIsOK = true;
-
-        if (x1Coordinate == null) {
-            message += "Кордината в поле X1 заполнена не верно\n";
-            requestFocusToEdit(x1);
-            inputIsOK = false;
+    private void findOverLappingRectangle() {
+        Rectangle rectangle = APPLICATION_EVENTS.findOverLappingRectangle();
+        if (rectangle != null) {
+            printAllRectangles("Найден прямоугольник: ".concat(rectangle.toString()), Collections.singletonList(rectangle));
         } else {
-            x1.setText(x1Coordinate.toString());
+            printInput.append("Прямоугольник в заданном наборе не найден\n");
         }
-        if (x2Coordinate == null) {
-            message += "Кордината в поле X2 заполнена не верно\n";
-            requestFocusToEdit(x2);
-            inputIsOK = false;
-        } else {
-            x2.setText(x2Coordinate.toString());
-        }
-        if (y1Coordinate == null) {
-            message += "Кордината в поле Y1 заполнена не верно\n";
-            requestFocusToEdit(y1);
-            inputIsOK = false;
-        } else {
-            y1.setText(y1Coordinate.toString());
-        }
-        if (y2Coordinate == null) {
-            message += "Кордината в поле Y2 заполнена не верно\n";
-            requestFocusToEdit(y2);
-            inputIsOK = false;
-        } else {
-            y2.setText(y2Coordinate.toString());
-        }
-
-        if (!inputIsOK) {
-            showMessage(message, JOptionPane.ERROR_MESSAGE);
-        }
-        ;
-
-        return inputIsOK;
     }
 
-    private void showMessage(String message, int messageStyle) {
-        JOptionPane.showMessageDialog(view, message, "Rectangle Compute", messageStyle);
-    }
+    public void clearInputRectangles() {
 
-    public RectangleForm() {
-
-
-        printInput.setEditable(false);
-
-        addRectangle.addActionListener(add ->
-                addRectangle()
-        );
-
-        computeBtn.addActionListener(compute -> {
-
-                    if (!isComputeDump) {
-                        computeBtn.setText("Исходные.");
-                        computeRectangle();
-                        isComputeDump = true;
-                    } else {
-                        computeBtn.setText("Рассчитать");
-                        loadAndShowOldRectangleFromJSON();
-                        isComputeDump = false;
-                    }
-                }
-        );
-
-        clearStorage.addActionListener(clear -> clearStorageAndJSONFile());
-
-
-    }
-
-    public RectangleForm(Path jsonFilePath) {
-        this();
-        loadAndShowOldRectangleFromJSON();
-
-        jsonWriter = new JSONWriter(jsonFilePath);
-
-    }
-
-    private void loadAndShowOldRectangleFromJSON() {
-
+        this.countRectangle.setText("Всего фигур: 0");
         printInput.setText(MESSAGE_FROM_AREA);
+        APPLICATION_EVENTS.clearDataAndJSONFile();
 
-        List<Rectangle> rectangles = RectangleStorage.getRectangles();
-
-        if (!rectangles.isEmpty()) {
-            showMessage("При загрузке ПО обнаружено несколько прямоугольников: " +
-                    printAllRectangles(rectangles), JOptionPane.INFORMATION_MESSAGE);
-        }
-
-    }
-
-
-    private void showResults() {
-        JSONReaderToStorage reader = new JSONReaderToStorage(Path.of(jsonWriter.getPathToJSON().getParent() + "\\result.json"));
-
-        printInput.setText("Результаты расчетов:\n");
-
-        List<Rectangle> rectangleList = reader.parseJSONToList();
-
-        if (rectangleList.isEmpty()) {
-            printInput.append("empty");
-        } else {
-            rectangleList.forEach(l -> {
-                printInput.append(l.toString());
-            });
-        }
-    }
-
-    public void computeRectangle() {
-
-        List<Rectangle> rectangles = RectangleStorage.getRectangles();
-
-        if (rectangles.size() > 1) {
-            ActionImpl action = new ActionImpl(rectangles);
-            Rectangle rectangleResult = action.compute();
-
-            JSONWriter writer = new JSONWriter(Path.of(jsonWriter.getPathToJSON().getParent() + "\\result.json"));
-            writer.write(Collections.singletonList(rectangleResult));
-            showResults();
-
-            showMessage("Результат успешно записаны в файл result.json", JOptionPane.INFORMATION_MESSAGE);
-
-        } else {
-            showMessage("Для расчетов необходимо иметь 2 и более прямоугольника!", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
-
-    private void addRectangle(Rectangle rectangle) {
-        RectangleStorage.addRectangle(rectangle);
-        jsonWriter.write(RectangleStorage.getRectangles());
-        printInput.append(rectangle.toString());
     }
 
     private void addRectangle() {
 
-        Double x1Coordinate = InputCoordinate.parseCoordinate(x1.getText());
-        Double x2Coordinate = InputCoordinate.parseCoordinate(x2.getText());
-        Double y1Coordinate = InputCoordinate.parseCoordinate(y1.getText());
-        Double y2Coordinate = InputCoordinate.parseCoordinate(y2.getText());
-
-        if (!checkInputIsOK(x1Coordinate, x2Coordinate, y1Coordinate, y2Coordinate)) {
-            return;
+        Rectangle rectangle = APPLICATION_EVENTS.addRectangle(x1Edit.getText(), x2Edit.getText(), y1Edit.getText(), y2Edit.getText());
+        if (rectangle != null) {
+            printInput.append("Прямоугольник добавлен: ".concat(rectangle.toString()));
+            this.countRectangle.setText("Всего фигур: " + APPLICATION_EVENTS.getCountRecord());
+            clearInput();
+        } else {
+            showMessage("Координаты введены не верно, должны быть только числа (Пример - 123.5 или 56)", JOptionPane.ERROR_MESSAGE);
         }
-        addRectangle(new Rectangle(x1Coordinate, x2Coordinate, y1Coordinate, y2Coordinate));
-        showMessage("Прямоугольник добавлен!", JOptionPane.INFORMATION_MESSAGE);
-        clearInput();
     }
 
-    private int printAllRectangles(List<Rectangle> rectangles) {
+    private void showResultJSONFile() {
+        Rectangle rectangle = APPLICATION_EVENTS.getResultFromJSON();
+
+        if (rectangle != null) {
+            printAllRectangles("Найден прямоугольник: ".concat(rectangle.toString()), Collections.singletonList(rectangle));
+        } else {
+            printInput.append("РЕЗУЛЬТАТ: Прямоугольник в файле результатов не найден! (empty)\nЛибо файл еще не был создан!\n");
+        }
+    }
+
+
+    //фокусировка на поле ввода координат
+    private void requestFocusToEdit(JTextField edit) {
+        edit.requestFocusInWindow(FocusEvent.Cause.ACTIVATION);
+    }
+
+
+    //печать всех имеющихся прямоугольников из хранилища
+    private void printAllRectangles(String message, List<Rectangle> rectangles) {
+        printInput.append(message);
         rectangles.forEach(r -> printInput.append(r.toString()));
-        return rectangles.size();
     }
 
-    private void clearStorageAndJSONFile() {
 
-        int countRecords = RectangleStorage.getRectangles().size();
+    //чистка полей ввода и ффокусировка на первом
+    private void clearInput() {
+        x1Edit.setText("");
+        x2Edit.setText("");
+        y1Edit.setText("");
+        y2Edit.setText("");
+        requestFocusToEdit(x1Edit);
+    }
 
-        if (countRecords > 0) {
-            RectangleStorage.clearStorage();
-            jsonWriter.clear();
-            printInput.setText(MESSAGE_FROM_AREA);
-        }
+    //  выбросить сообщение пользователю
+    private void showMessage(String message, int messageStyle) {
+        JOptionPane.showMessageDialog(view, message, "Rectangle Compute", messageStyle);
     }
 
 

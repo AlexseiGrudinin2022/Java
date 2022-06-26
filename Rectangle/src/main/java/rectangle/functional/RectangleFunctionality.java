@@ -3,7 +3,7 @@ package rectangle.functional;
 
 import rectangle.model.Rectangle;
 
-interface ActionCompute {
+interface RectangleFunctionality {
 
     Rectangle compute();
 

@@ -11,32 +11,24 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class JSONWriter {
-
-
     private final Path pathToJSON;
-
 
     public JSONWriter(Path pathToJSON) {
         this.pathToJSON = pathToJSON;
     }
 
-    public Path getPathToJSON() {
-        return pathToJSON;
-    }
-
-    public void write(List<Rectangle> storage) {
+    public void write(List<Rectangle> storage, String objectParseToJSON) {
 
         if (storage.isEmpty()) {
             return;
         }
-
 
         JSONObject rectanglesJSON = new JSONObject();
         JSONArray rectangleArr = new JSONArray();
 
         if (storage.get(0) == null) {
 
-            rectanglesJSON.put("rects", "empty");
+            rectanglesJSON.put(objectParseToJSON, "empty");
 
         } else {
 
@@ -44,14 +36,14 @@ public class JSONWriter {
                     s ->
                     {
                         JSONObject rectangleParam = new JSONObject();
-                        rectangleParam.put("x1", s.x1());
-                        rectangleParam.put("x2", s.x2());
-                        rectangleParam.put("y1", s.y1());
-                        rectangleParam.put("y2", s.y2());
+                        rectangleParam.put("x1", s.getX1());
+                        rectangleParam.put("x2", s.getX2());
+                        rectangleParam.put("y1", s.getY1());
+                        rectangleParam.put("y2", s.getY2());
                         rectangleArr.add(rectangleParam);
                     }
             );
-            rectanglesJSON.put("rects", rectangleArr);
+            rectanglesJSON.put(objectParseToJSON, rectangleArr);
         }
 
 
@@ -64,9 +56,12 @@ public class JSONWriter {
 
     }
 
+
     public void clear() {
         try {
-            Files.delete(pathToJSON);
+            if (Files.isExecutable(pathToJSON)) {
+                Files.delete(pathToJSON);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
