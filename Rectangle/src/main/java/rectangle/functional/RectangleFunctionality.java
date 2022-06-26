@@ -5,7 +5,7 @@ import rectangle.model.Rectangle;
 
 interface RectangleFunctionality {
 
-    Rectangle compute();
+    boolean compute(String objectParseToJSON);
 
 
 }

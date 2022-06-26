@@ -1,6 +1,6 @@
 package rectangle.UIForm;
 
-import rectangle.UIForm.events.EventsApplication;
+import rectangle.UIForm.eventsForm.EventsApplication;
 import rectangle.model.Rectangle;
 
 import javax.swing.*;
@@ -31,15 +31,15 @@ public final class RectangleForm {
     private final String MESSAGE_FROM_AREA = "список имеющихся прямоугольников\n";
 
 
-    private final EventsApplication APPLICATION_EVENTS;
+    private final EventsApplication eventsApplication;
 
     public RectangleForm(EventsApplication applicationEvents) {
 
-        this.APPLICATION_EVENTS = applicationEvents;
+        this.eventsApplication = applicationEvents;
 
         printInput.setEditable(false);
-        printAllRectangles(MESSAGE_FROM_AREA, APPLICATION_EVENTS.getRectangleListFromJSON(true));
-        this.countRectangle.setText("Всего фигур: " + APPLICATION_EVENTS.getCountRecord());
+        printAllRectangles(MESSAGE_FROM_AREA, eventsApplication.getRectangleListFromJSON(true));
+        this.countRectangle.setText("Всего фигур: " + eventsApplication.getCountRecord());
         addRectangle.addActionListener(add -> addRectangle()); //добавить в json и storage
         computeBtn.addActionListener(compute -> findOverLappingRectangle()); //рассчитать
         savingResult.addActionListener(show -> showResultJSONFile()); // просмотр resultJson
@@ -51,28 +51,30 @@ public final class RectangleForm {
     }
 
     private void findOverLappingRectangle() {
-        Rectangle rectangle = APPLICATION_EVENTS.findOverLappingRectangle();
-        if (rectangle != null) {
-            printAllRectangles("Найден прямоугольник: ", Collections.singletonList(rectangle));
+        boolean rectangleISearch = eventsApplication.findOverLappingRectangle();
+        System.out.println(rectangleISearch);
+        if (rectangleISearch) {
+            printAllRectangles("Найден прямоугольник: ", Collections.singletonList(eventsApplication.getResultFromJSON()));
         } else {
             printInput.append("Прямоугольник в заданном наборе не найден\n");
         }
+
     }
 
     public void clearInputRectangles() {
 
         this.countRectangle.setText("Всего фигур: 0");
         printInput.setText(MESSAGE_FROM_AREA);
-        APPLICATION_EVENTS.clearDataAndJSONFile();
+        eventsApplication.clearDataAndJSONFile();
 
     }
 
     private void addRectangle() {
 
-        Rectangle rectangle = APPLICATION_EVENTS.addRectangle(x1Edit.getText(), x2Edit.getText(), y1Edit.getText(), y2Edit.getText());
+        Rectangle rectangle = eventsApplication.addRectangle(x1Edit.getText(), x2Edit.getText(), y1Edit.getText(), y2Edit.getText());
         if (rectangle != null) {
             printInput.append("Прямоугольник добавлен: ".concat(rectangle.toString()));
-            this.countRectangle.setText("Всего фигур: " + APPLICATION_EVENTS.getCountRecord());
+            this.countRectangle.setText("Всего фигур: " + eventsApplication.getCountRecord());
             clearInput();
         } else {
             showMessage("Координаты введены не верно, должны быть только числа (Пример - 123.5 или 56)", JOptionPane.ERROR_MESSAGE);
@@ -80,7 +82,7 @@ public final class RectangleForm {
     }
 
     private void showResultJSONFile() {
-        Rectangle rectangle = APPLICATION_EVENTS.getResultFromJSON();
+        Rectangle rectangle = eventsApplication.getResultFromJSON();
 
         if (rectangle != null) {
             printAllRectangles("Найден прямоугольник: ", Collections.singletonList(rectangle));

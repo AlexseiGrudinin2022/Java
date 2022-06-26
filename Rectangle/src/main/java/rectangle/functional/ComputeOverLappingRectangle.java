@@ -1,33 +1,35 @@
 package rectangle.functional;
 
+import rectangle.JSON.JSONWriter;
 import rectangle.model.Rectangle;
 
 
+import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 
 public class ComputeOverLappingRectangle implements RectangleFunctionality {
 
     private final List<Rectangle> rectangleList;
+    private final Path pathResultFile;
 
-    public ComputeOverLappingRectangle(List<Rectangle> rectangleList) {
+    public ComputeOverLappingRectangle(List<Rectangle> rectangleList, Path pathResultFile) {
         this.rectangleList = rectangleList;
+        this.pathResultFile = pathResultFile;
     }
 
     @Override
-    public Rectangle compute() {
+    public boolean compute(String objectParseToJSON) {
 
-        double x1 = 0;
-        double x2 = 0;
-        double y1 = 0;
-        double y2 = 0;
+        JSONWriter writer = new JSONWriter(pathResultFile);
 
+        if (rectangleList.size() > 1) {
 
-        if (!rectangleList.isEmpty()) {
             Rectangle startRectangle = rectangleList.get(0);
-            x1 = startRectangle.getX1();
-            x2 = startRectangle.getX2();
-            y1 = startRectangle.getY1();
-            y2 = startRectangle.getY2();
+            double x1 = startRectangle.getX1();
+            double x2 = startRectangle.getX2();
+            double y1 = startRectangle.getY1();
+            double y2 = startRectangle.getY2();
 
             for (int i = 1; i < rectangleList.size(); i++) {
                 Rectangle temp = rectangleList.get(i);
@@ -36,18 +38,20 @@ public class ComputeOverLappingRectangle implements RectangleFunctionality {
                 y1 = Math.max(y1, temp.getY1());
                 y2 = Math.min(y2, temp.getY2());
 
-                if (!isValid(x1, x2, y1, y2)) {
-                    return null;
+                if (!(x1 < x2 && y1 < y2)) {
+                    writer.write(objectParseToJSON);
+                    return false;
                 }
             }
-
+            writer.write(
+                    Collections.singletonList(new Rectangle(x1, x2, y1, y2)),
+                    objectParseToJSON);
+            return true;
         }
-        return new Rectangle(x1, x2, y1, y2);
-    }
+        writer.write(objectParseToJSON);
+        return false;
 
 
-    private boolean isValid(double x1, double x2, double y1, double y2) {
-        return (x1 < x2 && y1 < y2);
     }
 
 

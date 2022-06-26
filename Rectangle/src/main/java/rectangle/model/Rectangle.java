@@ -34,6 +34,14 @@ public class Rectangle {
 
     @Override
     public boolean equals(Object obj) {
+
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
         Rectangle rectangle = (Rectangle) obj;
 
         return (this.x1 == rectangle.x1 &&
@@ -46,6 +54,7 @@ public class Rectangle {
     public String toString() {
         return "x1: " + x1 + ", " + "x2: " + x2 + ", " + "y1: " + y1 + ", " + "y2: " + y2 + "\n";
     }
+
 
 
 }

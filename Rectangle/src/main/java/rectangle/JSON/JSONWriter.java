@@ -61,6 +61,20 @@ public class JSONWriter {
 
     }
 
+    public void write(String objectParseToJSON) {
+
+        JSONObject rectanglesJSON = new JSONObject();
+        rectanglesJSON.put(objectParseToJSON, "empty");
+
+        try (FileWriter fileWriter = new FileWriter(pathToJSON.toString())) {
+            fileWriter.write(rectanglesJSON.toJSONString());
+            fileWriter.flush();
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
 
     public void clear() {
         try {

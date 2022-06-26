@@ -2,8 +2,10 @@ package rectangle;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
-import rectangle.UIForm.starterUI.DefaultUIApplication;
+import rectangle.UIForm.RectangleForm;
+import rectangle.UIForm.eventsForm.EventsApplication;
 
+import javax.swing.*;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -43,11 +45,18 @@ public class Main {
         final String FULL_PATH_AND_NAME_RECTANGLE_JSON_FILE = PATH_TO_JSON_FILE.concat("\\").concat(JSON_FILE_NAME);
 
 
-        DefaultUIApplication showFormApplication = new DefaultUIApplication(WIDTH_SIZE_FORM, HEIGHT_SIZE_FORM);
-        showFormApplication.run(FULL_PATH_AND_NAME_RECTANGLE_JSON_FILE,
-                FULL_RESULT_PATH_AND_NAME_JSON_FILE,
-                OBJECT_PARSE_TO_JSON);
-
-
+        JFrame frame = new JFrame("Rectangles JSON Test");
+        frame.setSize(WIDTH_SIZE_FORM, HEIGHT_SIZE_FORM);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        RectangleForm form = new RectangleForm(
+                new EventsApplication(
+                        FULL_PATH_AND_NAME_RECTANGLE_JSON_FILE,
+                        FULL_RESULT_PATH_AND_NAME_JSON_FILE,
+                        OBJECT_PARSE_TO_JSON)
+        );
+        
+        frame.add(form.getView());
+        frame.setVisible(true);
     }
 }

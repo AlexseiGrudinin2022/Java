@@ -1,4 +1,4 @@
-package rectangle.UIForm.events;
+package rectangle.UIForm.eventsForm;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
@@ -83,14 +83,11 @@ public final class EventsApplication {
 
     }
 
-    public Rectangle findOverLappingRectangle() {
+    public boolean findOverLappingRectangle() {
 
-        ComputeOverLappingRectangle compute = new ComputeOverLappingRectangle(rectangleList);
-        Rectangle rectangle = compute.compute();
+        ComputeOverLappingRectangle compute = new ComputeOverLappingRectangle(rectangleList, IOResultFile);
+        return compute.compute(objectParseToJSON);
 
-        new JSONWriter(IOResultFile).write(Collections.singletonList(rectangle), objectParseToJSON); //пишем json result
-
-        return rectangle;
     }
 
     public List<Rectangle> getRectangleListFromJSON(boolean addToTmpGlobalStorage) {
