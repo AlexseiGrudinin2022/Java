@@ -1,5 +1,7 @@
 package rectangle.JSON;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import rectangle.model.Rectangle;
@@ -12,6 +14,8 @@ import java.util.List;
 
 public class JSONWriter {
     private final Path pathToJSON;
+
+    private final Logger logger = (Logger) LogManager.getRootLogger();
 
     public JSONWriter(Path pathToJSON) {
         this.pathToJSON = pathToJSON;
@@ -51,6 +55,7 @@ public class JSONWriter {
             fileWriter.write(rectanglesJSON.toJSONString());
             fileWriter.flush();
         } catch (IOException e) {
+            logger.error(e.getMessage());
             throw new RuntimeException(e);
         }
 

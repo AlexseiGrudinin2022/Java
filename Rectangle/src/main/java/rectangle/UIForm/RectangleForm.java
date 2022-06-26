@@ -53,7 +53,7 @@ public final class RectangleForm {
     private void findOverLappingRectangle() {
         Rectangle rectangle = APPLICATION_EVENTS.findOverLappingRectangle();
         if (rectangle != null) {
-            printAllRectangles("Найден прямоугольник: ".concat(rectangle.toString()), Collections.singletonList(rectangle));
+            printAllRectangles("Найден прямоугольник: ", Collections.singletonList(rectangle));
         } else {
             printInput.append("Прямоугольник в заданном наборе не найден\n");
         }
@@ -83,7 +83,7 @@ public final class RectangleForm {
         Rectangle rectangle = APPLICATION_EVENTS.getResultFromJSON();
 
         if (rectangle != null) {
-            printAllRectangles("Найден прямоугольник: ".concat(rectangle.toString()), Collections.singletonList(rectangle));
+            printAllRectangles("Найден прямоугольник: ", Collections.singletonList(rectangle));
         } else {
             printInput.append("РЕЗУЛЬТАТ: Прямоугольник в файле результатов не найден! (empty)\nЛибо файл еще не был создан!\n");
         }

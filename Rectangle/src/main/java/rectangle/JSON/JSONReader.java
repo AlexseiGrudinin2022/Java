@@ -1,5 +1,7 @@
 package rectangle.JSON;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -15,6 +17,7 @@ import java.util.List;
 public class JSONReader {
 
 
+    private final Logger logger = (Logger) LogManager.getRootLogger();
     private final Path pathToJSON;
 
     public JSONReader(Path pathToJSON) {
@@ -50,7 +53,8 @@ public class JSONReader {
                 }
 
             } catch (Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex.getMessage());
+                throw new RuntimeException(ex);
             }
             return result;
         }
@@ -64,7 +68,7 @@ public class JSONReader {
             List<String> rectangles = Files.readAllLines(pathToJSON);
             rectangles.forEach(builder::append);
         } catch (Exception ex) {
-            System.err.println(pathToJSON + " - file is not search!");
+            logger.error(ex.getMessage());
         }
         return builder.toString();
     }

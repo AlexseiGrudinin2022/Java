@@ -1,9 +1,10 @@
 package rectangle.UIForm.events;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Logger;
 import rectangle.JSON.JSONReader;
 import rectangle.JSON.JSONWriter;
 import rectangle.functional.ComputeOverLappingRectangle;
-import rectangle.input.InputCoordinate;
 import rectangle.model.Rectangle;
 
 import java.nio.file.Files;
@@ -25,6 +26,8 @@ public final class EventsApplication {
     private Path IOJSONFile;
 
     private final String JSON_RESULT_FILE_NAME = "result.json";
+
+    private final Logger logger = (Logger) LogManager.getRootLogger();
 
 
     private boolean inputIsValid(Double x1, Double x2, Double y1, Double y2) {
@@ -62,18 +65,26 @@ public final class EventsApplication {
 
 
     public Rectangle addRectangle(String x1, String x2, String y1, String y2) {
-        Double x1Coordinate = InputCoordinate.parseCoordinate(x1);
-        Double x2Coordinate = InputCoordinate.parseCoordinate(x2);
-        Double y1Coordinate = InputCoordinate.parseCoordinate(y1);
-        Double y2Coordinate = InputCoordinate.parseCoordinate(y2);
 
-        if (inputIsValid(x1Coordinate, x2Coordinate, y1Coordinate, y2Coordinate)) {
-            Rectangle rectangle = new Rectangle(x1Coordinate, x2Coordinate, y1Coordinate, y2Coordinate);
-            rectangleList.add(rectangle);
-            writeJSON();
-            return rectangle;
+        double x1Coordinate, x2Coordinate, y1Coordinate, y2Coordinate;
+
+        try {
+
+            x1Coordinate = Double.parseDouble(x1);
+            x2Coordinate = Double.parseDouble(x2);
+            y1Coordinate = Double.parseDouble(y1);
+            y2Coordinate = Double.parseDouble(y2);
+        } catch (Exception ex) {
+            logger.error(ex.getMessage());
+            return null;
         }
-        return null;
+
+
+        Rectangle rectangle = new Rectangle(x1Coordinate, x2Coordinate, y1Coordinate, y2Coordinate);
+        rectangleList.add(rectangle);
+        writeJSON();
+        return rectangle;
+
     }
 
     public Rectangle findOverLappingRectangle() {

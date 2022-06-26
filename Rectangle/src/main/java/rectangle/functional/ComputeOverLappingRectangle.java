@@ -13,7 +13,6 @@ public class ComputeOverLappingRectangle implements RectangleFunctionality {
         this.rectangleList = rectangleList;
     }
 
-
     @Override
     public Rectangle compute() {
 

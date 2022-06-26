@@ -1,13 +1,11 @@
 package rectangle;
 
-
 import rectangle.UIForm.starterUI.DefaultUIApplication;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 public class Main {
+
     public static void main(String[] args) {
+
 
         final String PATH_TO_JSON_FILE = "src\\main\\resources";
         final String JSON_FILE_NAME = "Rectangle.json";
