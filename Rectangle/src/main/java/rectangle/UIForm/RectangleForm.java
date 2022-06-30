@@ -4,7 +4,9 @@ import rectangle.UIForm.eventsForm.EventsApplication;
 import rectangle.model.Rectangle;
 
 import javax.swing.*;
-import java.awt.event.FocusEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -40,10 +42,38 @@ public final class RectangleForm {
         printInput.setEditable(false);
         printAllRectangles(MESSAGE_FROM_AREA, eventsApplication.getRectangleListFromJSON(true));
         this.countRectangle.setText("Всего фигур: " + eventsApplication.getCountRecord());
-        addRectangle.addActionListener(add -> addRectangle()); //добавить в json и storage
-        computeBtn.addActionListener(compute -> findOverLappingRectangle()); //рассчитать
-        savingResult.addActionListener(show -> showResultJSONFile()); // просмотр resultJson
-        clearRect.addActionListener(clear -> clearInputRectangles()); //убрать все прямоугольник и json
+
+
+        addRectangle.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                addRectangle();
+            }
+
+        });
+
+        computeBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                findOverLappingRectangle();
+            }
+        });
+
+        savingResult.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                showResultJSONFile();
+            }
+        });
+
+        clearRect.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                clearInputRectangles();
+            }
+        });
+
+
+        //    addRectangle.addActionListener(add -> addRectangle()); //добавить в json и storage
+        // computeBtn.addActionListener(compute -> findOverLappingRectangle()); //рассчитать
+        //   savingResult.addActionListener(show -> showResultJSONFile()); // просмотр resultJson
+        //   clearRect.addActionListener(clear -> clearInputRectangles()); //убрать все прямоугольник и json*/
     }
 
     public JPanel getView() {
@@ -51,10 +81,10 @@ public final class RectangleForm {
     }
 
     private void findOverLappingRectangle() {
+
         boolean rectangleISearch = eventsApplication.findOverLappingRectangle();
-        System.out.println(rectangleISearch);
         if (rectangleISearch) {
-            printAllRectangles("Найден прямоугольник: ", Collections.singletonList(eventsApplication.getResultFromJSON()));
+            printResult(Collections.singletonList(eventsApplication.getResultFromJSON()));
         } else {
             printInput.append("Прямоугольник в заданном наборе не найден\n");
         }
@@ -83,25 +113,43 @@ public final class RectangleForm {
 
     private void showResultJSONFile() {
         Rectangle rectangle = eventsApplication.getResultFromJSON();
-
-        if (rectangle != null) {
-            printAllRectangles("Найден прямоугольник: ", Collections.singletonList(rectangle));
-        } else {
-            printInput.append("РЕЗУЛЬТАТ: Прямоугольник в файле результатов не найден! (empty)\nЛибо файл еще не был создан!\n");
-        }
+        printResult(Collections.singletonList(rectangle));
     }
 
 
     //фокусировка на поле ввода координат
     private void requestFocusToEdit(JTextField edit) {
-        edit.requestFocusInWindow(FocusEvent.Cause.ACTIVATION);
+        edit.requestFocus(true);
     }
 
 
     //печать всех имеющихся прямоугольников из хранилища
     private void printAllRectangles(String message, List<Rectangle> rectangles) {
         printInput.append(message);
-        rectangles.forEach(r -> printInput.append(r.toString()));
+
+        for (Rectangle rectangle : rectangles) {
+            printInput.append(rectangle.toString());
+        }
+
+    }
+
+    private void printResult(List<Rectangle> rectangle_) {
+
+
+        if (!rectangle_.isEmpty()) {
+            Rectangle rectangle = rectangle_.get(0);
+            if ((rectangle.getX1() + rectangle.getY1()) == ((rectangle.getX2() + rectangle.getY2()))) {
+                printInput.append("\tПересечение в виде точки: ");
+            } else if ((rectangle.getY1() == rectangle.getY1()) && (rectangle.getY1() != rectangle.getX2())) {
+                printInput.append("\tПересечение в виде горизонтальой прямой: ");
+            } else if ((rectangle.getY1() != rectangle.getY1()) && (rectangle.getY1() == rectangle.getX2())) {
+                printInput.append("\tПересечение в виде вертикальной прямой: ");
+            }
+            printInput.append(rectangle.toString());
+        } else {
+            printInput.append("Пересечений найдено небыло!");
+        }
+
     }
 
 

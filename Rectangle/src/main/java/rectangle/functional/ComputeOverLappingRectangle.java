@@ -4,18 +4,23 @@ import rectangle.JSON.JSONWriter;
 import rectangle.model.Rectangle;
 
 
-import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 
 public class ComputeOverLappingRectangle implements RectangleFunctionality {
 
     private final List<Rectangle> rectangleList;
-    private final Path pathResultFile;
+    private final String pathResultFile;
 
-    public ComputeOverLappingRectangle(List<Rectangle> rectangleList, Path pathResultFile) {
+    public ComputeOverLappingRectangle(List<Rectangle> rectangleList, String pathResultFile) {
         this.rectangleList = rectangleList;
         this.pathResultFile = pathResultFile;
+    }
+
+
+    private boolean intersects(Rectangle a, Rectangle b) {
+        return ((a.getY1() < b.getY2() || a.getY2() > b.getY1() && a.getX2() < b.getX1() || a.getX1() >= b.getX2())
+                || (a.getY1() == b.getY1() || (a.getX2() == b.getX2())));
     }
 
     @Override
@@ -32,15 +37,20 @@ public class ComputeOverLappingRectangle implements RectangleFunctionality {
             double y2 = startRectangle.getY2();
 
             for (int i = 1; i < rectangleList.size(); i++) {
+
                 Rectangle temp = rectangleList.get(i);
                 x1 = Math.max(x1, temp.getX1());
                 x2 = Math.min(x2, temp.getX2());
                 y1 = Math.max(y1, temp.getY1());
                 y2 = Math.min(y2, temp.getY2());
 
-                if (!(x1 < x2 && y1 < y2)) {
-                    writer.write(objectParseToJSON);
+
+                if (!intersects(startRectangle, temp) || (x1 < x2 && y1 < y2)) {
+
+                    writer.write(Collections.<Rectangle>emptyList(), objectParseToJSON);
                     return false;
+                } else {
+                    startRectangle = temp;
                 }
             }
             writer.write(
@@ -48,7 +58,7 @@ public class ComputeOverLappingRectangle implements RectangleFunctionality {
                     objectParseToJSON);
             return true;
         }
-        writer.write(objectParseToJSON);
+        writer.write(Collections.<Rectangle>emptyList(), objectParseToJSON);
         return false;
 
 

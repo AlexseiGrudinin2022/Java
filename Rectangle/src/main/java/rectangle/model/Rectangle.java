@@ -1,5 +1,7 @@
 package rectangle.model;
 
+import static sun.swing.MenuItemLayoutHelper.max;
+
 public class Rectangle {
 
 
@@ -54,7 +56,6 @@ public class Rectangle {
     public String toString() {
         return "x1: " + x1 + ", " + "x2: " + x2 + ", " + "y1: " + y1 + ", " + "y2: " + y2 + "\n";
     }
-
 
 
 }

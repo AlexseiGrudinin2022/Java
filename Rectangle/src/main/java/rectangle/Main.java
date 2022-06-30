@@ -1,7 +1,5 @@
 package rectangle;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Logger;
 import rectangle.UIForm.RectangleForm;
 import rectangle.UIForm.eventsForm.EventsApplication;
 
@@ -13,16 +11,17 @@ import java.util.Properties;
 
 public class Main {
 
-    final static Logger logger = (Logger) LogManager.getRootLogger();
 
     public static void main(String[] args) {
 
         Properties properties = new Properties();
+
         try {
             properties.load(new FileInputStream("application.properties"));
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            throw new RuntimeException(e);
         }
+
 
         //пути до файл и переменная имени файла переменного json
         final String PATH_TO_JSON_FILE = properties.getProperty("json.path.rectangles");
