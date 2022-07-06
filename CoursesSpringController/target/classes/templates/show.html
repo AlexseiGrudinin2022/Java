@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Show record</title>
+</head>
+<body>
+
+<p th:text="${'Name course: '+course.getNameCourse()}">VALUE</p>
+<p th:text="${'Price: ' + course.getPriceCourse()}">VALUE</p>
+<p th:text="${'Duration course: '+course.getLengthCourseMS()}">VALUE</p>
+<br>
+<form th:method="GET" th:action="@{/courses/edit/{id}(id=${course.getIdCourse()})}">
+    <input type="submit" value="Edit!"/>
+</form>
+
+<form th:method="Get" th:action="@{/courses/delete/{id}(id=${course.getIdCourse()})}">
+    <input type="submit" value="Delete"/>
+</form>
+
+</body>
+</html>

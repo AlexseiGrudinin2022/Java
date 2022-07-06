@@ -1,0 +1,4 @@
+skillbox\model\Course.class
+skillbox\controllers\CoursesController.class
+skillbox\Main.class
+skillbox\database\DataBase.class

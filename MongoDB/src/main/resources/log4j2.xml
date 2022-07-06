@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="info">
+
+    <appenders>
+
+        <File name="overCount" fileName="logs/overCount.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Filters>
+                <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+        </File>
+
+        <File name="agedOverYears" fileName="logs/agedOverYears.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Filters>
+                <ThresholdFilter level="fatal" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+        </File>
+
+        <File name="oldStudentCourses" fileName="logs/oldStudentCourses.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Filters>
+                <ThresholdFilter level="off" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+        </File>
+
+        <File name="young" fileName="logs/young.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Filters>
+                <ThresholdFilter level="off" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+        </File>
+    </appenders>
+
+
+    <loggers>
+        <root level="warn">
+            <appender-ref ref="overCount" level="warn"/>
+            <appender-ref ref="agedOverYears" level="error"/>
+            <appender-ref ref="oldStudentCourses" level="fatal"/>
+            <appender-ref ref="young" level="info"/>
+        </root>
+    </loggers>
+
+
+</configuration>

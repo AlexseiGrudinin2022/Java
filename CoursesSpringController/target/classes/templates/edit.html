@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit</title>
+</head>
+<body>
+
+
+<form th:method="POST"  th:object="${courseEdit}">
+
+    <label for="idEditName">Enter name: </label>
+    <input type="text" th:field="*{nameCourse}" id="idEditName"/>
+    <br/>
+
+    <label for="idEditPrice">Enter price course: </label>
+    <input type="text" th:field="*{priceCourse}" id="idEditPrice"/>
+    <br/>
+
+    <label for="idEditDuration">Enter course duration: </label>
+    <input type="text" th:field="*{lengthCourseMS}" id="idEditDuration"/>
+    <br/>
+
+    <input type="submit" value="Update!"/>
+</form>
+
+
+</body>
+</html>
